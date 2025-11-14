@@ -72,6 +72,12 @@ https://www.notion.so/2a9829eddd48805cb6eec539b60d2388
 作業フロードキュメントを追加しました"
 ```
 
+プルリクエスト作成後、Vercel のプレビューデプロイが自動的に作成され、プルリクエストにコメントが追加されます。
+
+プレビュー URL の形式: `https://[プロジェクト名]-git-[ブランチ名]-[ユーザー名]-projects.vercel.app`
+
+例: `https://kaido02-git-tasks-11-dogears-projects.vercel.app/`
+
 ## 8. Notion タスクに PR URL を追加・ステータスを検証中に変更
 
 プルリクエスト作成後、以下の 2 つを実行してください。
