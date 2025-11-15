@@ -1,8 +1,13 @@
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function proxy(request: NextRequest) {
   const { response, user } = await updateSession(request);
+
+  // 環境変数が設定されていない場合は、そのまま通過させる
+  if (!user && !response) {
+    return NextResponse.next({ request });
+  }
 
   // 保護するページのパスを定義
   const protectedPaths = ["/dashboard", "/profile"]; // 必要に応じて変更
