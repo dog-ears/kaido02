@@ -90,3 +90,11 @@ https://www.notion.so/2a9829eddd48805cb6eec539b60d2388
 例: `https://github.com/dog-ears/kaido02/pull/1`
 
 Notion タスクの更新は、`.ai/rule.md`の Notion 操作に関するルールに従って、モデルを推奨モデルに切り替えてから実行してください。
+
+## 9. プルリクエストのマージ
+
+プルリクエストのレビューが完了したら、マージします。
+
+マージ方法は **Create a merge commit** を使用してください。
+
+この方法では、すべてのコミット履歴が保持され、マージコミットが作成されます。
