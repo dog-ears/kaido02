@@ -1,0 +1,47 @@
+name: Update Notion Task on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  update-notion:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract Notion URL from PR body
+        id: extract-url
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          NOTION_URL=$(echo "$PR_BODY" | grep -oP 'https://www\.notion\.so/[a-f0-9]+' | head -1)
+          if [ -z "$NOTION_URL" ]; then
+            echo "Notion URL not found in PR body"
+            exit 1
+          fi
+          echo "notion_url=$NOTION_URL" >> $GITHUB_OUTPUT
+          # Extract page ID from URL (format: https://www.notion.so/{page-id})
+          PAGE_ID=$(echo "$NOTION_URL" | sed 's|https://www\.notion\.so/||' | sed 's/-//g')
+          echo "page_id=$PAGE_ID" >> $GITHUB_OUTPUT
+
+      - name: Update Notion Task Status
+        env:
+          NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
+        run: |
+          PAGE_ID="${{ steps.extract-url.outputs.page_id }}"
+          # Format page ID with dashes (format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+          FORMATTED_PAGE_ID=$(echo "$PAGE_ID" | sed 's/\(.\{8\}\)\(.\{4\}\)\(.\{4\}\)\(.\{4\}\)\(.*\)/\1-\2-\3-\4-\5/')
+          
+          curl -X PATCH "https://api.notion.com/v1/pages/$FORMATTED_PAGE_ID" \
+            -H "Authorization: Bearer $NOTION_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -H "Notion-Version: 2022-06-28" \
+            -d '{
+              "properties": {
+                "ステータス": {
+                  "status": {
+                    "name": "完了"
+                  }
+                }
+              }
+            }'
+
