@@ -1,6 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import LogoutButton from "@/components/LogoutButton";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -16,6 +24,34 @@ export default function Home() {
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             To get started, edit the page.tsx file.
           </h1>
+          {user ? (
+            <div className="flex flex-col gap-4">
+              <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+                ログイン中: {user.email}
+              </p>
+              <LogoutButton />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+                ログインしていません
+              </p>
+              <div className="flex gap-4">
+                <Link
+                  href="/login"
+                  className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                >
+                  ログイン
+                </Link>
+                <Link
+                  href="/register"
+                  className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+                >
+                  新規登録
+                </Link>
+              </div>
+            </div>
+          )}
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
             Looking for a starting point or more instructions? Head over to{" "}
             <a
