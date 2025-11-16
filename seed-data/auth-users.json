@@ -1,0 +1,16 @@
+[
+  {
+    "email": "dev-user1@example.com",
+    "password": "Password123",
+    "user_metadata": {
+      "role": "tester"
+    }
+  },
+  {
+    "email": "dev-user2@example.com",
+    "password": "Password456",
+    "user_metadata": {
+      "role": "viewer"
+    }
+  }
+]
