@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## セットアップ
 
-## Getting Started
+1. `.env` に Supabase プロジェクトの URL / ANON KEY を設定してください（`.env.example` などは用意していません）。  
+   例:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=...
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+   SUPABASE_SERVICE_ROLE_KEY=... # scripts/seed-auth.ts で使用
+   ```
+2. 依存をインストール:
+   ```bash
+   npm install
+   ```
 
-First, run the development server:
+## 開発サーバー
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ブラウザで [http://localhost:3000](http://localhost:3000) を開きます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 認証テストデータのシード
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Supabase の認証テーブルをテストユーザーで初期化するスクリプトがあります。
 
-## Learn More
+```bash
+npm run seed:auth
+```
 
-To learn more about Next.js, take a look at the following resources:
+- `NODE_ENV=development` でのみ実行できます。
+- データの内容は `seed-data/auth-users.json` を編集することで変更できます。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## E2E テスト（Playwright）
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+主要な認証フロー（登録 / ログイン / ログアウト / セッション維持）を Playwright で自動テストしています。  
+実行前に `.env` が正しく設定され、Supabase テストプロジェクトに接続できることを確認してください。
 
-## Deploy on Vercel
+```bash
+npm run test:e2e
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Playwright は自動で `npm run dev` を起動し、`tests/e2e/global-setup.ts` で `npm run seed:auth` を実行してからテストを開始します。
+- シードをスキップしたい場合は `SKIP_E2E_SEED=true npm run test:e2e` としてください。
+- `PLAYWRIGHT_BASE_URL`（または `BASE_URL`）を `.env` に設定すると、デフォルトの `http://localhost:3000` 以外のホストに対してテストできます。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+テストケースの詳細や自動化対象は `docs/auth-test-cases.md` を参照してください。
