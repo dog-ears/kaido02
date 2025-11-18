@@ -52,6 +52,12 @@ export default async function Home() {
               </div>
             </div>
           )}
+          <Link
+            href="/member"
+            className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+          >
+            メンバーダッシュボードへ
+          </Link>
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
             Looking for a starting point or more instructions? Head over to{" "}
             <a
