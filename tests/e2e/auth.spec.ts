@@ -62,11 +62,13 @@ test.describe("ユーザー登録", () => {
     await confirmInput.fill("short");
     await page.getByRole("button", { name: "新規登録" }).click();
 
-    const passwordValidity = await passwordInput.evaluate((el) => ({
-      valid: el.validity.valid,
-      tooShort: el.validity.tooShort,
-      message: el.validationMessage,
-    }));
+    const passwordValidity = await passwordInput.evaluate(
+      (input: HTMLInputElement) => ({
+        valid: input.validity.valid,
+        tooShort: input.validity.tooShort,
+        message: input.validationMessage,
+      })
+    );
     expect(passwordValidity.valid).toBe(false);
     expect(passwordValidity.tooShort).toBe(true);
     expect(passwordValidity.message.length).toBeGreaterThan(0);
@@ -175,6 +177,13 @@ test.describe("メンバーダッシュボード保護", () => {
     await page.waitForURL("**/member");
     await expect(page.getByText("ログイン中のメールアドレス")).toBeVisible();
     await expect(page.getByText(seededUser.email)).toBeVisible();
+  });
+
+  test("TC-019: 未ログインでホームのダッシュボードリンクを押すとログイン画面へ遷移する", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: "メンバーダッシュボードへ" }).click();
+    await expect(page).toHaveURL(/\/login\?redirectedFrom=%2Fmember$/);
+    await expect(page.getByRole("heading", { name: "ログイン" })).toBeVisible();
   });
 
   test("TC-021: ホームのダッシュボードリンクは常に表示され、ログイン後に遷移できる", async ({ page }) => {
