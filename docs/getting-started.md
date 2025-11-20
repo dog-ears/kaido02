@@ -4,14 +4,22 @@
 
 ## 1. 環境変数の設定
 
-`.env` に Supabase の URL と ANON KEY を設定します（`.env.example` はありません）。
+ルートに用意してある `.env.example` をコピーして `.env` を作成してください。
 
+```bash
+cp .env.example .env
 ```
-NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-# スクリプトが認証ユーザーを再作成するために使用
-SUPABASE_SERVICE_ROLE_KEY=...
-```
+
+各変数の意味は次のとおりです。
+
+| 変数 | 用途 |
+| --- | --- |
+| `GITHUB_TOKEN` | GitHub API を叩くスクリプトや自動化タスク用の Personal Access Token |
+| `NOTION_API_KEY` / `NOTION_DATABASE_ID` | `docs/notion-api-setup.md` で説明している Notion 連携に使用 |
+| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase クライアント (ブラウザ/サーバー) が参照するプロジェクト情報 |
+| `SUPABASE_SERVICE_ROLE_KEY` | `npm run seed:auth` など管理権限を使うローカル処理用（本番では使用しないこと） |
+
+必要に応じて各値を埋めてから次の手順へ進みます。
 
 ## 2. 依存関係のインストール
 
