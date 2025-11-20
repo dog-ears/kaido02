@@ -1,3 +1,5 @@
+[README](../README.md) / 認証機能 テストケース
+
 # 認証機能 テストケース
 
 Supabase Auth による Email/Password 認証機能の確認すべきテストケース一覧です。

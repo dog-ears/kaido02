@@ -1,3 +1,5 @@
+[README](../README.md) / Notion API セットアップ
+
 # Notion API セットアップ
 
 ## 概要
