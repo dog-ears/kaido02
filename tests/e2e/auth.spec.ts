@@ -95,8 +95,9 @@ test.describe("ログイン", () => {
     await page.getByLabel("パスワード").fill(seededUser.password);
     await page.getByRole("button", { name: "ログイン" }).click();
 
-    await page.waitForURL("**/");
-    await expect(page.getByText(`ログイン中: ${seededUser.email}`)).toBeVisible();
+    await page.waitForURL("**/member");
+    await expect(page.getByText("ログイン中のメールアドレス")).toBeVisible();
+    await expect(page.getByText(seededUser.email)).toBeVisible();
   });
 
   test("TC-009: 間違ったパスワードでのログインエラー", async ({ page }) => {
@@ -131,7 +132,8 @@ test.describe("ログアウトとセッション", () => {
     await page.getByLabel("メールアドレス").fill(seededUser.email);
     await page.getByLabel("パスワード").fill(seededUser.password);
     await page.getByRole("button", { name: "ログイン" }).click();
-    await page.waitForURL("**/");
+    await page.waitForURL("**/member");
+    await page.goto("/");
 
     await page.getByRole("button", { name: "ログアウト" }).click();
 
@@ -144,13 +146,54 @@ test.describe("ログアウトとセッション", () => {
     await page.getByLabel("メールアドレス").fill(seededUser.email);
     await page.getByLabel("パスワード").fill(seededUser.password);
     await page.getByRole("button", { name: "ログイン" }).click();
-    await page.waitForURL("**/");
+    await page.waitForURL("**/member");
+    await page.goto("/");
 
     await expect(page.getByText(`ログイン中: ${seededUser.email}`)).toBeVisible();
 
     await page.waitForTimeout(500);
     await page.reload();
     await expect(page.getByText(`ログイン中: ${seededUser.email}`)).toBeVisible();
+  });
+});
+
+test.describe("メンバーダッシュボード保護", () => {
+  test("TC-018: 未認証ユーザーが/memberにアクセスするとログインへリダイレクトされる", async ({ page }) => {
+    await page.goto("/member");
+
+    await expect(page).toHaveURL(/\/login\?redirectedFrom=%2Fmember$/);
+    await expect(page.getByRole("heading", { name: "ログイン" })).toBeVisible();
+  });
+
+  test("TC-020: リダイレクト後にログインすると/memberへ戻る", async ({ page }) => {
+    await page.goto("/member");
+
+    await page.getByLabel("メールアドレス").fill(seededUser.email);
+    await page.getByLabel("パスワード").fill(seededUser.password);
+    await page.getByRole("button", { name: "ログイン" }).click();
+
+    await page.waitForURL("**/member");
+    await expect(page.getByText("ログイン中のメールアドレス")).toBeVisible();
+    await expect(page.getByText(seededUser.email)).toBeVisible();
+  });
+
+  test("TC-021: ホームのダッシュボードリンクは常に表示され、ログイン後に遷移できる", async ({ page }) => {
+    // 未ログインでもリンクがある
+    await page.goto("/");
+    const dashboardLink = page.getByRole("link", { name: "メンバーダッシュボードへ" });
+    await expect(dashboardLink).toBeVisible();
+
+    // ログインしてリンクから遷移
+    await page.goto("/login");
+    await page.getByLabel("メールアドレス").fill(seededUser.email);
+    await page.getByLabel("パスワード").fill(seededUser.password);
+    await page.getByRole("button", { name: "ログイン" }).click();
+
+    await page.waitForURL("**/member");
+    await page.goto("/");
+    await dashboardLink.click();
+    await page.waitForURL("**/member");
+    await expect(page.getByText(seededUser.email)).toBeVisible();
   });
 });
 
