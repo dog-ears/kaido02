@@ -1,47 +1,32 @@
-## セットアップ
+# kaido02 ドキュメントインデックス
 
-1. `.env` に Supabase プロジェクトの URL / ANON KEY を設定してください（`.env.example` などは用意していません）。  
-   例:
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=...
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-   SUPABASE_SERVICE_ROLE_KEY=... # scripts/seed-auth.ts で使用
-   ```
-2. 依存をインストール:
-   ```bash
-   npm install
-   ```
+このリポジトリで参照すべきドキュメントとルールを README で一元的に整理しました。詳細な手順や背景は各ドキュメントを参照してください。
 
-## 開発サーバー
+## クイックスタート
 
-```bash
-npm run dev
-```
+- **開発環境の構築**: `docs/getting-started.md`
+  - 環境変数、依存インストール、`npm run dev`、`npm run seed:auth`、Playwright 実行方法など基本的な手順をまとめています。
+- **タスク運用フロー**: `docs/workflow.md`
+  - 計画 → Notion 登録 → ブランチ作成 → PR → Notion 更新までの流れ。
+- **認証テストデータ**: `docs/auth-seed.md`
+  - Supabase のユーザー投入手順や `seed-data/auth-users.json` の編集方法。
+- **E2E テストとシナリオ一覧**: `docs/auth-test-cases.md`
+  - Playwright で自動化されているケースと、手動確認が必要な範囲。
 
-ブラウザで [http://localhost:3000](http://localhost:3000) を開きます。
+## ドキュメント一覧
 
-## 認証テストデータのシード
+| ファイル | 概要 |
+| --- | --- |
+| `docs/getting-started.md` | ローカルセットアップ、開発サーバー、シード、E2E 実行方法 |
+| `docs/auth-seed.md` | Supabase 認証シードスクリプトの使い方と注意点 |
+| `docs/auth-test-cases.md` | 認証機能のテストケース一覧と自動化ポリシー |
+| `docs/workflow.md` | タスクの進め方、Notion/PR 連携、ブランチ/コミットルール |
+| `docs/git.md` | リモートリポジトリ設定や初回 push 手順 |
+| `docs/vercel.md` | Vercel プロジェクト設定・デプロイ手順 |
+| `docs/notion-api-setup.md` | GitHub Actions から Notion タスクを更新する手順 |
+| `docs/notion-cursor-integration.md` | Notion MCP と Cursor の連携ルール（モデル切り替え手順など） |
 
-Supabase の認証テーブルをテストユーザーで初期化するスクリプトがあります。
+## 参考情報
 
-```bash
-npm run seed:auth
-```
-
-- `NODE_ENV=development` でのみ実行できます。
-- データの内容は `seed-data/auth-users.json` を編集することで変更できます。
-
-## E2E テスト（Playwright）
-
-主要な認証フロー（登録 / ログイン / ログアウト / セッション維持）を Playwright で自動テストしています。  
-実行前に `.env` が正しく設定され、Supabase テストプロジェクトに接続できることを確認してください。
-
-```bash
-npm run test:e2e
-```
-
-- Playwright は自動で `npm run dev` を起動し、`tests/e2e/global-setup.ts` で `npm run seed:auth` を実行してからテストを開始します。
-- シードをスキップしたい場合は `SKIP_E2E_SEED=true npm run test:e2e` としてください。
-- `PLAYWRIGHT_BASE_URL`（または `BASE_URL`）を `.env` に設定すると、デフォルトの `http://localhost:3000` 以外のホストに対してテストできます。
-
-テストケースの詳細や自動化対象は `docs/auth-test-cases.md` を参照してください。
+- Supabase テストユーザーを追加したい場合は `seed-data/auth-users.json` を編集し、`npm run seed:auth` を実行してください。
+- Notion 連携を行う際は `.ai/rule.md` のルールに従ってモデル切り替えと手順確認を行ってください。
