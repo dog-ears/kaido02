@@ -1,3 +1,5 @@
+[README](../README.md) / Notion の AI から Cursor を操作できるようにする
+
 # Notion の AI から Cursor を操作できるようにする
 
 ## 概要

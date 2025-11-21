@@ -32,7 +32,7 @@ function LoginForm() {
 
     // リダイレクト先を取得（リダイレクトされた場合）
     const redirectedFrom = searchParams.get("redirectedFrom");
-    router.push(redirectedFrom || "/");
+    router.push(redirectedFrom || "/member");
     router.refresh();
   };
 
