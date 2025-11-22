@@ -8,6 +8,11 @@ const seededUser = {
   password: "Password123",
 };
 
+const seededMemberUser = {
+  email: "dev-user2@example.com",
+  password: "Password456",
+};
+
 const nonExistingUser = {
   email: "missing-user@example.com",
   password: "DoesNotMatter1!",
@@ -100,6 +105,7 @@ test.describe("ログイン", () => {
     await page.waitForURL("**/member");
     await expect(page.getByText("ログイン中のメールアドレス")).toBeVisible();
     await expect(page.getByText(seededUser.email)).toBeVisible();
+    await expect(page.getByText("現在の役割: 管理者")).toBeVisible();
   });
 
   test("TC-009: 間違ったパスワードでのログインエラー", async ({ page }) => {
@@ -203,6 +209,26 @@ test.describe("メンバーダッシュボード保護", () => {
     await dashboardLink.click();
     await page.waitForURL("**/member");
     await expect(page.getByText(seededUser.email)).toBeVisible();
+  });
+});
+
+test.describe("ユーザー役割", () => {
+  test("TC-Role-01: 管理者ロールの表示確認", async ({ page }) => {
+    await page.goto("/login");
+    await page.getByLabel("メールアドレス").fill(seededUser.email);
+    await page.getByLabel("パスワード").fill(seededUser.password);
+    await page.getByRole("button", { name: "ログイン" }).click();
+    await page.waitForURL("**/member");
+    await expect(page.getByText("現在の役割: 管理者")).toBeVisible();
+  });
+
+  test("TC-Role-02: 一般メンバーロールの表示確認", async ({ page }) => {
+    await page.goto("/login");
+    await page.getByLabel("メールアドレス").fill(seededMemberUser.email);
+    await page.getByLabel("パスワード").fill(seededMemberUser.password);
+    await page.getByRole("button", { name: "ログイン" }).click();
+    await page.waitForURL("**/member");
+    await expect(page.getByText("現在の役割: 一般メンバー")).toBeVisible();
   });
 });
 
