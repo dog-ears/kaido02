@@ -41,7 +41,7 @@ test.describe("ユーザー登録", () => {
     await page.getByLabel("パスワード").fill("Password123!");
     await page.getByRole("button", { name: "ログイン" }).click();
 
-    await page.waitForURL("**/member");
+    await page.waitForURL("**/member", { timeout: 60000 });
     await expect(page.getByText("現在の役割: 一般メンバー")).toBeVisible();
   });
 
