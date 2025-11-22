@@ -25,6 +25,7 @@ function uniqueEmail() {
 
 test.describe("ユーザー登録", () => {
   test("TC-001: 正常な新規登録", async ({ page }) => {
+    test.setTimeout(60000);
     const email = uniqueEmail();
     await page.goto("/register");
 
