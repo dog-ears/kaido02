@@ -35,6 +35,14 @@ test.describe("ユーザー登録", () => {
 
     await expect(page).toHaveURL(/\/login\?registered=true/);
     await expect(page.getByRole("heading", { name: "ログイン" })).toBeVisible();
+
+    // 続けてログインし、役割を確認する
+    await page.getByLabel("メールアドレス").fill(email);
+    await page.getByLabel("パスワード").fill("Password123!");
+    await page.getByRole("button", { name: "ログイン" }).click();
+
+    await page.waitForURL("**/member");
+    await expect(page.getByText("現在の役割: 一般メンバー")).toBeVisible();
   });
 
   test("TC-002: パスワード不一致エラー", async ({ page }) => {
