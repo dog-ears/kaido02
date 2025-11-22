@@ -13,6 +13,10 @@ export default async function MemberPage() {
     redirect("/login?redirectedFrom=/member");
   }
 
+  const role = user.user_metadata?.role;
+  const roleName =
+    role === "admin" ? "管理者" : role === "member" ? "一般メンバー" : "ゲスト";
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="w-full max-w-2xl rounded-xl bg-white p-10 shadow-lg dark:bg-zinc-900">
@@ -27,6 +31,12 @@ export default async function MemberPage() {
             ログイン中のメールアドレス:{" "}
             <span className="font-medium text-black dark:text-zinc-100">
               {user.email}
+            </span>
+          </p>
+          <p className="text-zinc-600 dark:text-zinc-400">
+            現在の役割:{" "}
+            <span className="font-medium text-black dark:text-zinc-100">
+              {roleName}
             </span>
           </p>
         </header>
